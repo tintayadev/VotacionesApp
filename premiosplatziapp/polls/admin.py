@@ -7,7 +7,18 @@ class ChoiceInline(admin.StackedInline):
     extra = 3
 
 class QuestionAdmin(admin.ModelAdmin):
-    fields = ["pub_date", "question_text"]
+    #To order the fields
+    fields = ["pub_date", "question_text"] 
+
     inlines = [ChoiceInline]
+    
+    # Adds more information fields
+    list_display = ("question_text", "pub_date", "was_published_recently") 
+
+    # Adds the option to filter the questions based on the pub_date
+    list_filter = ["pub_date"]
+
+    # Adds a search field for questions
+    search_fields = ["question_text"]
 
 admin.site.register(Question, QuestionAdmin)
