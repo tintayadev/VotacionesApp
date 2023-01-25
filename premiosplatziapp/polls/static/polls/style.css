@@ -1,0 +1,26 @@
+li {
+    list-style: none;
+    display: block;
+    margin: 24px;
+}
+
+li a{
+    color:whitesmoke;
+    padding: 12px;
+    text-decoration: none;
+    border-radius: 8px;
+    background: gray;
+}
+
+li a:hover{
+    background: orange;
+}
+
+li a:active {
+    background: red;
+    color: whitesmoke;
+}
+
+/* body {
+    background: white url("images/background.gif") no-repeat;
+} */

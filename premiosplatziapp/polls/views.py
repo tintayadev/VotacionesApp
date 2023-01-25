@@ -5,6 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.utils import timezone
 from django.views import generic
+from django.db.models import Count
 
 from .models import Question, Choice
 
@@ -29,10 +30,11 @@ class IndexView(generic.ListView):
     template_name = 'polls/index.html'
     context_object_name = 'latest_question_list'
 
-    def get_queryset(self): 
-        """Return the last five published questions (not including those set to be published in the future)."""
-        # return Question.objects.order_by('-pub_date')[:5]
-        return Question.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")[:5]
+    def get_queryset(self):
+        """Return the last five published questions, that have at least two questions"""
+        question = Question.objects.filter(pub_date__lte=timezone.now())
+        question = question.alias(entries=Count("choice")).filter(entries__gte=2)
+        return question.order_by("-pub_date")[:5]
 
 
 class DetailView(generic.DetailView):
@@ -49,6 +51,9 @@ class DetailView(generic.DetailView):
 class ResultView(generic.DetailView): 
     model = Question
     template_name = 'polls/results.html'
+
+    def get_queryset(self):
+        return Question.objects.filter(pub_date__lte=timezone.now())
 
 
 def vote(request, question_id): 
